@@ -1,6 +1,6 @@
-# Insert Project Name Here
-## Insert Name Here
-Insert project description here.
+# Project 0: Banking App
+## Kelly Schwartz
+This is a basic banking application.
 
 # User Stories
 - [x] List
