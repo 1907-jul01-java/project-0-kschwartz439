@@ -1,7 +1,10 @@
 package com.revature;
 
-abstract class User{
-    protected void Scanner(){
-
-    }
+public abstract class User implements Check{
+    String firstName;
+    String lastName;
+    int birthday;
+    int birthMonth;
+    int birthYear;
+    //This is where a password will go.
 }
