@@ -15,13 +15,13 @@ interface Check {
             while (true){
                 try (Socket socket = sc.accept();
                     OutputStream os = socket.getOutputStream()){
-                    BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    String line = br.readLine();
+                    BufferedReader bread = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    String line = bread.readLine();
                     while (!line.isEmpty()){
                         System.out.println(line);
-                        br.readLine();
+                        bread.readLine();
                     }
-                    String response = "HTTP:/1.1 200 OK\r\nContent-Type: application.json\r\n\r\n{'name':'Kelly'";
+                    String response = "HTTP:/1.1 200 OK\r\nContent-Type: application.json\r\n\r\n{'name':'placeholder'";
                     os.write(response.getBytes("UTF-8"));
                 }
             }
