@@ -15,7 +15,6 @@ public class Check extends ConnectionUtils implements Access{
         Scanner scanner = new Scanner(System.in);
 
     public Check(){
-        this.connection = connection;
 
         System.out.println("Please enter a username, then press enter.");
         user = scanner.nextLine();
