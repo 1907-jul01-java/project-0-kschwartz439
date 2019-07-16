@@ -11,8 +11,8 @@ public class User{
     Connection connection;
     Scanner scanner = new Scanner(System.in);
 
-    public User(){
-        
+    public User(Scanner scanner, Connection connection){
+
     }
 
 

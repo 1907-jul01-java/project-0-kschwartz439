@@ -2,8 +2,9 @@ package com.revature.users;
 
 import java.sql.*;
 import java.util.Scanner;
+import com.revature.users.*;
 
-public class Check{
+public class Check implements Access{
         Connection connection;
         Scanner scanner;
         String type;
@@ -11,6 +12,7 @@ public class Check{
         String lastName;
         String username;
         int userId;
+        String userAccess;
 
     public Check(Scanner scanner, Connection connection){
         this.connection = connection;
@@ -48,7 +50,8 @@ public class Check{
                 answer = scanner.next();
                 if (answer.equals(userResult.getString("userPass"))){
                     System.out.println("Welcome, " + userResult.getString("firstName") + " " + userResult.getString("lastName") + ".\n");
-                    return userResult.getString("access");
+                    userAccess = userResult.getString("access");
+                    this.access();
                 }
                 else{
                     System.out.println("Invalid Password. \n");
@@ -85,7 +88,7 @@ public class Check{
                     answer = scanner.next();
                     if (answer!=null){
                         password = answer;
-                        try (PreparedStatement userUpdate = connection.prepareStatement("INSERT VALUES (username, password) INTO userLogins")) {
+                        try (PreparedStatement userUpdate = connection.prepareStatement("INSERT VALUES (?, ?) INTO userLogins")) {
                             userUpdate.setString(1, username);
                             userUpdate.setString(2, password);
                             userUpdate.executeUpdate();
@@ -143,5 +146,27 @@ public class Check{
             this.person(userId);
         }
         return null;
+    }
+
+    public void access(){
+        switch (userAccess){
+            case "customer": Customer customer = new Customer();
+                customer.menu();
+                break;
+            case "employee": Employee employee = new Employee();
+                employee.menu();
+                break;
+            case "admin":
+                Admin admin = new Admin();
+                admin.menu();
+                break;
+            case "creator": Creator creator = new Creator();
+                creator.menu();
+                break;
+        }
+    }
+
+    public void Close(){
+
     }
 }
