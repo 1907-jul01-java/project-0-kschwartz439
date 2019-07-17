@@ -1,6 +1,9 @@
 package com.revature.dao;
 
 import java.util.Scanner;
+
+import com.revature.connectionutils.ConnectionUtils;
+
 import java.sql.*;
 
 public class LoginDao{
@@ -8,31 +11,35 @@ public class LoginDao{
     String username;
     String password;
     String access;
-    Connection connection;
 
-    public void CheckPassword(){
+    public void CheckPassword(String username){
+        ConnectionUtils conUtil = new ConnectionUtils();
+        Connection connection = conUtil.getConnection();
         System.out.println("Please enter your password.\n");
         password = scanner.next();
-
         while (password.equals(null)){
             System.out.println("Please enter a valid argument and try again.");
             password = scanner.next();
         }
-        try (PreparedStatement upStatement = connection.prepareStatement("SELECT userPass FROM userLogins WHERE ? = ? AND userPass = ?")){
-            upStatement.setString(1, "username");
-            upStatement.setString(2, username);
-            upStatement.setString(3, password);
+        try (PreparedStatement upStatement = connection.prepareStatement("SELECT userPass FROM userLogins WHERE username = ? AND userPass = ?")){
+            upStatement.setString(1, username);
+            upStatement.setString(2, password);
             ResultSet upResult = upStatement.executeQuery();
             if (!upResult.next()){
                 System.out.println("Please enter a valid argument and try again.\n");
-                this.CheckPassword();
+                this.CheckPassword(username);
             }
+            this.CheckAccess(username);
         }
         catch (SQLException e){
             e.getMessage();
         }
     }
     public void CheckUserName(){
+        ConnectionUtils conUtil = new ConnectionUtils();
+        Connection connection = conUtil.getConnection();
+        System.out.println("URL: " + conUtil.getUrl() + " password: " + conUtil.getPassword() + "User: " + conUtil.getUser() + " Connection: " + conUtil.getConnection().toString());
+
         System.out.println("Please enter your username.\n");
         username = scanner.next();
 
@@ -40,23 +47,31 @@ public class LoginDao{
             System.out.println("Please enter a valid argument and try again.\n");
             username = scanner.next();
         }
-        try (PreparedStatement unStatement = connection.prepareStatement("SELECT username FROM userLogins WHERE username = ?")) {
+        try  {
+            PreparedStatement unStatement = connection.prepareStatement("SELECT * FROM userLogins WHERE username = ?");
             unStatement.setString(1, username);
             ResultSet unResult = unStatement.executeQuery();
             if (!unResult.next()){
                 System.out.println("Please enter a valid argument and try again.\n");
                 this.CheckUserName();
             }
-            this.CheckPassword();
+            if (username.equals(unResult.getString("username"))){
+                this.CheckPassword(username);
+            }
         } catch (SQLException e) {
-            e.getMessage();
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 
-    public void CheckAccess(){  
-        try (PreparedStatement acStatement = connection.prepareStatement("SELECT access FROM users INNER JOIN userLogins WHERE username = ?")) {
+    public void CheckAccess(String username){  
+        ConnectionUtils conUtil = new ConnectionUtils();
+        Connection connection = conUtil.getConnection();
+        try (PreparedStatement acStatement = connection.prepareStatement("SELECT * FROM users JOIN userLogins ON id = userId WHERE userLogins.username = ?")) {
             acStatement.setString(1, username);
             ResultSet acResult = acStatement.executeQuery();
+            acResult.next();
             access = acResult.getString("access");
             switch (access){
                 //Customer
@@ -73,11 +88,13 @@ public class LoginDao{
                     crDao.menu();
             }
         } catch (SQLException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
     }
 
     public void Logout(){
+        ConnectionUtils conUtil = new ConnectionUtils();
+        Connection connection = conUtil.getConnection();
         try {
             connection.close();
         } catch (SQLException e) {

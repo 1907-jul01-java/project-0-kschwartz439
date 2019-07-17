@@ -1,22 +1,32 @@
-drop table if exists users;
-drop table if exists userLogins;
-drop table if exists accounts;
 drop table if exists usersAccounts;
-create table accounts (accountName varchar not null, accountNumber serial primary key, accountBalance double not null, approved boolean not null);
-create table users (firstName varchar not null, lastName varchar not null, id integer primary key references userId, access varchar not null);
-create table userLogins (username varchar primary key, userPass varchar not null, userId serial not null);
-create table usersAccounts (userRef references userId, accountRef references accountNumber)
+drop table if exists users;
+drop table if exists accounts;
+drop table if exists userLogins;
+create table userLogins (username varchar unique not null, userPass varchar not null, userId serial primary key);
+create table accounts (accountName varchar not null, accountNumber serial primary key, accountBalance numeric(15, 2) not null, approved boolean not null);
+create table users (firstName varchar not null, lastName varchar not null, id integer primary key references userLogins(userId), access varchar not null);
+create table usersAccounts (userRef integer references userLogins(userId), accountRef integer references accounts(accountNumber));
 
-insert into userLogins(username, userPass) values (KellyCR, p4ssw0rd);
-insert into users(firstName, lastName, id, access) values (Kelly, Schwartz, SELECT userId FROM userLogins WHERE username = KellyCR, creator)
+insert into userLogins(username, userPass) values ('KellyCR', 'password');
+insert into users(firstName, lastName, id, access) values ('Kelly', 'Schwartz', 1, 'creator');
+insert into userLogins(username, userPass) values ('KellyAD', 'p4ssw0rd');
+insert into users(firstName, lastName, id, access) values ('Kelly2', 'Schwartz', 2, 'admin');
+insert into userLogins(username, userPass) values ('KellyEM', 'password');
+insert into users(firstName, lastName, id, access) values ('Kelly3', 'Schwartz', 3, 'employee');
+insert into userLogins(username, userPass) values ('KellyCU', 'password');
+insert into users(firstName, lastName, id, access) values ('Kelly4', 'Schwartz', 4, 'customer');
+insert into accounts (accountName, accountNumber, accountBalance, approved) values ('checking', 1, 0.00, false);
+insert into usersAccounts (userRef, accountRef) values (2, 1);
 
 --Get PL/SQL language to run this line
+/*
 create or replace function get_username(user_name varchar) returns varchar AS
 $$
-    SELECT username FROM userLogins WHERE username = user_name;
-$$language sql;
+    SELECT username FROM userLogins WHERE username = ?;
+$$language sql
 
 create or replace function get_userPass(user_pass varchar) returns varchar AS
 $$
-    SELECT id FROM userLogins WHERE userPass = user_pass;
-$$language sql;
+    SELECT id FROM userLogins WHERE userPass = ?;
+$$language sql
+*/

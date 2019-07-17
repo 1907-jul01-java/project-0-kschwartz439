@@ -6,7 +6,5 @@ public class App {
     public static void main(String[] args) {
         LoginDao lDao = new LoginDao();
         lDao.CheckUserName();
-        lDao.CheckAccess();
-        
     }
 }

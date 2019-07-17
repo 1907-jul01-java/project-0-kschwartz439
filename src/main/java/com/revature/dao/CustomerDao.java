@@ -13,17 +13,14 @@ public class CustomerDao{
     AccountDao aDao = new AccountDao();
 
     public void menu(){
-        System.out.println("Would you like to\n1. Check your bank accounts.\n2. Edit your current bank accounts.\n3. Apply for a new bank account.\n4. Logout.\n");
+        boolean a=true;
+        while (a=true){System.out.println("Would you like to\n1. Check your bank accounts.\n2. Edit your current bank accounts.\n3. Apply for a new bank account.\n4. Logout.\n");
         answer = scanner.next();
-        while (!answer.equals("1") || !answer.equals("2") || !answer.equals("3") || !answer.equals("4")){
-            System.out.println("Please enter a valid argument and try again.\n");
-            answer = scanner.next();
-        }
         switch (answer){
             case "1": aDao.ViewOwn();
             break;
             case "2":
-                System.out.println("Would you like to\n1. Make a deposit.\n2.Withdraw money.\n3. Close the account.");
+                System.out.println("Would you like to\n1. Make a deposit.\n2. Withdraw money.\n3. Close the account.");
                 answer2 = scanner.next();
                 switch (answer2){
                     case "1": aDao.Deposit();
@@ -40,8 +37,14 @@ public class CustomerDao{
                     case "2": aDao.ApplyJoint();
                     break;
                 }
+                break;
             case "4": lDao.Logout();
+            lDao.CheckUserName();
+            a=false;
             break;
+            default:
+                break;
         }
     }
+}
 }

@@ -1,33 +1,30 @@
 package com.revature.connectionutils;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.*;
-import java.util.Properties;
+//import java.util.Properties;
 
 //Connection with the server.
 public class ConnectionUtils{
-    String url;
-    String user;
-    String password;
-    Connection connection;
+    private String url;
+    private String user;
+    private String password;
+    private Connection connection;
 
     public ConnectionUtils(){
         try {
             //Could also just hard code the properties into the strings above.
-            Properties connprop = new Properties();
-            connprop.load(new FileReader("connectionutils/connection.properties"));
-            this.url = connprop.getProperty("url");
-            this.user = connprop.getProperty("user");
-            this.password = connprop.getProperty("password");
+            //Properties connprop = new Properties();
+            //connprop.load(new FileReader("connectionutils/connection.properties"));
+            this.url = "jdbc:postgresql://192.168.99.100:5432/postgres";
+            this.user = "postgres";
+            this.password = "postgres";
             this.connection = DriverManager.getConnection(this.url, this.user, this.password);
         } catch (SQLException e) {
             e.getMessage();
         }
-        catch (IOException e){
-            e.getMessage();
-        }
     }
+
+    
 
     public void close(){
         try{
@@ -38,6 +35,30 @@ public class ConnectionUtils{
     }
 
     public Connection getConnection(){
-        return connection;
+        return this.connection;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
