@@ -1,10 +1,10 @@
 package com.revature.users;
 
 import java.util.Scanner;
-
+import com.revature.dao.*;
 import java.sql.*;
 
-public class Admin{
+public class Admin extends User{
     Scanner scanner;
     String answer;
     Connection connection;
@@ -16,6 +16,8 @@ public class Admin{
     String accId;
     String answer4;
     int accBalance;
+    Check check = new Check(scanner, connection);
+    LoginDao lDao = new LoginDao();
 
     //Create Admin UI
     public Admin(){
@@ -31,7 +33,7 @@ public class Admin{
             answer = scanner.next();
         }
         switch (answer){
-            
+
             //Edit accounts with the 'employee' access modifier.
             case "1": try (PreparedStatement empStatement = connection.prepareStatement("SELECT * FROM users WHERE access = ?")) {
                 empStatement.setString(1, "employee");
@@ -218,11 +220,11 @@ public class Admin{
 
                             }
                             if (answer4.startsWith("-")){
-                                int answer5 = Integer.parseInt(answer4.substring(1, answer4.length()));
+                                int answer5 = Integer.parseInt(answer4.substring((answer4.indexOf("-") + 1), answer4.length()));
                                 while (answer5 > accResult.getInt("accountBalance")){
                                     System.out.println("You cannot take out more money than is in the account. Please enter a valid argument and try again.\n");
                                     answer4 = scanner.next();
-                                    answer5 = Integer.parseInt(answer4.substring(1, answer4.length()));
+                                    answer5 = Integer.parseInt(answer4.substring((answer4.indexOf("-") + 1), answer4.length()));
                                 }
                                 while (answer5 < accResult.getInt("accountBalance")){
                                     accBalance = (accResult.getInt("accountBalance") - answer5);
@@ -282,11 +284,10 @@ public class Admin{
                 e.getMessage();
             }
                 break;
-            case "4": try {
-                connection.close();
-            } catch (SQLException e) {
-                e.getMessage();
-            }
+
+            //Logout.
+            case "4": lDao.Logout();
+            check.ask();
                 break;
         }
     }

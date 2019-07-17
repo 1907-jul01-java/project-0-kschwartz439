@@ -2,9 +2,8 @@ package com.revature.users;
 
 import java.sql.*;
 import java.util.Scanner;
-import com.revature.users.*;
 
-public class Check implements Access{
+public class Check{
         Connection connection;
         Scanner scanner;
         String type;
@@ -150,7 +149,7 @@ public class Check implements Access{
 
     public void access(){
         switch (userAccess){
-            case "customer": Customer customer = new Customer();
+            case "customer": Customer customer = new Customer(userId);
                 customer.menu();
                 break;
             case "employee": Employee employee = new Employee();
