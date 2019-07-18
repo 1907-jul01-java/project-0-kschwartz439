@@ -21,9 +21,9 @@ public class CreatorDao{
     LoginDao lDao = new LoginDao();
     App app = new App();
     
-    public void menu(){
+    public void menu(int userID){
         boolean a = true;
-        while(a=true){System.out.println("Please select what you want to do. \n 1. Edit admin accounts. \n 2. Edit employee accounts. \n 3. Edit customer accounts. \n 4. Edit bank accounts. \n 5. Exit.");
+        while(a=true){System.out.println("Please select what you want to do. \n1. Edit admin accounts. \n2. Edit employee accounts. \n3. Edit customer accounts. \n4. View bank accounts with User ID. \n5. Approve Accounts.\n6. Exit.");
         answer = scanner.next();
         switch (answer){
             
@@ -43,13 +43,17 @@ public class CreatorDao{
             case "4": aDao.ViewOther();
                 break;
 
+            //Approve Accounts.
+            case "5": aDao.Create();
+                break;
+
             //Logout.
-            case "5": lDao.Logout();
+            case "6": lDao.Logout();
                 lDao.CheckUserName();
                 a=false;
                 break;
             
-            default: this.menu();
+            default: this.menu(userID);
                 break;
         }
     }

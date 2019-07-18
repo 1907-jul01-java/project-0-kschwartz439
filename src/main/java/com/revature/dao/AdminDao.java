@@ -13,9 +13,9 @@ public class AdminDao{
     LoginDao lDao = new LoginDao();
     AccountDao aDao = new AccountDao();
 
-    public void menu(){
+    public void menu(int userID){
         boolean a = true;
-        while (a=true){System.out.println("Please select what you want to do.\n1. Edit employee accounts. \n2. Edit customer accounts. \n3. Edit bank accounts. \n4. Exit.");
+        while (a=true){System.out.println("Please select what you want to do.\n1. Edit employee accounts. \n2. Edit customer accounts. \n3. View bank accounts with User ID. \n4. Approve an account.\n5. Exit.");
         answer = scanner.next();
         switch (answer){
             //Edit accounts with the 'employee' access modifier.
@@ -30,13 +30,17 @@ public class AdminDao{
             case "3": aDao.ViewOther();
                 break;
 
+            //Approve accounts.
+            case "4": aDao.Create();
+                break;
+
             //Logout.
-            case "4": lDao.Logout();
+            case "5": lDao.Logout();
                 lDao.CheckUserName();
                 a=false;
                 break;
             
-            default: this.menu();
+            default: this.menu(userID);
                 break;
         }
     }

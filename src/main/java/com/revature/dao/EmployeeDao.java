@@ -13,7 +13,7 @@ public class EmployeeDao{
     UserDao uDao = new UserDao();
     AccountDao aDao = new AccountDao();
 
-    public void menu(){
+    public void menu(int userID){
         boolean a = true;
         while (a=true){System.out.println("Please select what you want to do.\n1. Edit bank accounts. \n2. Exit.");
         answer = scanner.next();
@@ -28,7 +28,7 @@ public class EmployeeDao{
                 a=false;
                 break;
             
-            default: this.menu();
+            default: this.menu(userID);
                 break;
         }
     }

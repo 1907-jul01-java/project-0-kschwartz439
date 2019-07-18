@@ -1,5 +1,6 @@
 package com.revature.dao;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -8,97 +9,105 @@ import com.revature.connectionutils.*;
 public class AccountDao{
     String answer;
     double answerD;
+    int accountID;
     int answerI;
     double accBalance1;
     double accBalance2;
+    BigDecimal accBalance;
     Scanner scanner = new Scanner(System.in);
     ConnectionUtils conUtil = new ConnectionUtils();
     Connection connection = conUtil.getConnection();
     UserDao uDao = new UserDao();
     LoginDao lDao = new LoginDao();
 
-    public void Deposit(){
-        this.SelectAccount();
+    public void Deposit(int userID){
+        this.SelectAccount(userID);
         System.out.println("How much would you like to deposit?\n");
         answerD = scanner.nextDouble();
-        if (!scanner.hasNextDouble()){
-            System.out.println("Please enter a valid argument and try again.");
-            answerD = scanner.nextDouble();
-        }
-        try (PreparedStatement depStatement = connection.prepareStatement("SELECT * FROM accounts WHERE id = ?")) {
-            depStatement.setInt(1, uDao.userId);
+        try {
+            PreparedStatement depStatement = connection.prepareStatement("SELECT * FROM accounts INNER JOIN usersAccounts ON accountNumber = accountRef WHERE usersAccounts.userRef = ?");
+            depStatement.setInt(1, userID);
             ResultSet depResult = depStatement.executeQuery();
+            depResult.next();
             accBalance1 = depResult.getDouble("accountBalance");
             accBalance2 = accBalance1 + answerD;
+            accBalance = (BigDecimal.valueOf(accBalance2));
+            depStatement.close();
+            try {
+                PreparedStatement dep2Statement = connection.prepareStatement("UPDATE accounts SET accountBalance = ? WHERE accountNumber = ?");
+                dep2Statement.setBigDecimal(1, accBalance);
+                dep2Statement.setInt(2, accountID);
+                dep2Statement.executeUpdate();
+                dep2Statement.close();
+            }
+            catch (SQLException e){
+                e.printStackTrace();
+            }
         } catch (SQLException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
-        try (PreparedStatement dep2Statement = connection.prepareStatement("UPDATE accounts accountBalance = ? WHERE accountNumber = ?")) {
-            dep2Statement.setDouble(1, accBalance2);
-            dep2Statement.setInt(2, uDao.userId);
-            dep2Statement.executeUpdate();
-        } catch (SQLException e) {
-            e.getMessage();
-        }
-        System.out.println("Your account has been updated.\nYour new balance is " + accBalance2 + ".\nPress enter to continue.");
-        scanner.next();
+        System.out.println("Your account has been updated.\nYour new balance is " + accBalance2 + ".\n");
     }
 
-    public void Withdraw(){
-        this.SelectAccount();
+    public void Withdraw(int userID){
+        this.SelectAccount(userID);
         System.out.println("How much would you like to withdraw?\n");
         answerD = scanner.nextDouble();
-        if (!scanner.hasNextDouble()){
-            System.out.println("Please enter a valid argument and try again.");
-            answerD = scanner.nextDouble();
-        }
-        try (PreparedStatement witStatement = connection.prepareStatement("SELECT * FROM accounts WHERE id = ?")) {
-            witStatement.setInt(1, uDao.userId);
+        try (PreparedStatement witStatement = connection.prepareStatement("SELECT * FROM accounts WHERE accountNumber = ?")) {
+            witStatement.setInt(1, accountID);
             ResultSet witResult = witStatement.executeQuery();
-            accBalance1 = witResult.getDouble("accountBalance");
+            witResult.next();
+            accBalance = witResult.getBigDecimal("accountBalance");
+            accBalance1 = accBalance.doubleValue();
             if (accBalance1 < answerD){
                 System.out.println("You cannot withdraw more money than you have.\nPlease try again.\n");
-                this.Withdraw();
+                this.Withdraw(userID);
             }
             accBalance2 = accBalance1 - answerD;
+            accBalance = BigDecimal.valueOf(accBalance2);
+            System.out.println("Thank you. Your new account balance is: " + accBalance + ".\n");
+            witStatement.close();
         } catch (SQLException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
-        try (PreparedStatement wit2Statement = connection.prepareStatement("UPDATE accounts accountBalance = ? WHERE id = ?")) {
-            wit2Statement.setDouble(1, accBalance2);
-            wit2Statement.setInt(2, uDao.userId);
+        try (PreparedStatement wit2Statement = connection.prepareStatement("UPDATE accounts SET accountBalance = ? WHERE accountNumber = ?")) {
+            wit2Statement.setBigDecimal(1, accBalance);
+            wit2Statement.setInt(2, accountID);
+            wit2Statement.executeUpdate();
+            wit2Statement.close();
         } catch (SQLException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
     }
 
-    public void Apply(){
+    public void Apply(int userID){
         System.out.println("What would you like to call your account?\n");
         answer = scanner.next();
         try {
             PreparedStatement appStatement = connection.prepareStatement("INSERT INTO accounts (accountName, accountBalance, approved) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             appStatement.setString(1, answer);
-            appStatement.setDouble(2, 0.00);
+            appStatement.setInt(2, 0);
             appStatement.setBoolean(3, false);
             appStatement.executeUpdate();
             ResultSet app2Result = appStatement.getGeneratedKeys();
             app2Result.next();
-            answerI = app2Result.getInt(1);
+            answerI = app2Result.getInt(2);
+            appStatement.close();
             PreparedStatement app2Statement = connection.prepareStatement("INSERT INTO usersAccounts (userRef, accountRef) VALUES (?, ?)");
-            app2Statement.setInt(1, uDao.userId);
+            app2Statement.setInt(1, userID);
             app2Statement.setInt(2, answerI);
             app2Statement.executeUpdate();
             app2Statement.close();
-            appStatement.close();
         } catch (SQLException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
         System.out.println("Your application has been accepted and is currently processing.\nOnce an admin approves it, you will be able to start banking.\nThank you and have a nice day.\n");
     }
 
     public void Create(){
         try {
-            PreparedStatement crStatement = connection.prepareStatement("SELECT * FROM accounts WHERE approved = false");
+            PreparedStatement crStatement = connection.prepareStatement("SELECT * FROM accounts WHERE approved = ?");
+            crStatement.setBoolean(1, false);
             ResultSet crResult = crStatement.executeQuery();
             while (crResult.next()){
                 System.out.println("Account Name: "+crResult.getString("accountName")+", Account Number: "+crResult.getInt("accountNumber")+", Status: "+crResult.getBoolean("approved"));
@@ -108,33 +117,33 @@ public class AccountDao{
             answerI = scanner.nextInt();
             PreparedStatement cr2Statement = connection.prepareStatement("UPDATE accounts SET approved = true WHERE accountNumber = ?");
             cr2Statement.setInt(1, answerI);
+            cr2Statement.executeUpdate();
             System.out.println("Thank you for approving the account.\n");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void ApplyJoint(){
+    public void ApplyJoint(int userID){
         System.out.println("Please enter a username, or 'null' to finish entering people.\n");
         answer = scanner.next();
         ArrayList<Integer> userIds = new ArrayList<Integer>();
-        userIds.add(uDao.userId);
-        while (!answer.equals(null)){
-            lDao.CheckUserName();
-            uDao.GetUserID();
-            userIds.add(uDao.userId);
+        while (!answer.equals("null")){
+            //make JointUsername method
+            //get UserID from GetUserID
+            //add userID to arraylist
         }
         System.out.println("What would you like to call the account?");
         answer = scanner.next();
         try {
-            PreparedStatement appJStatement = connection.prepareStatement("INSERT INTO accounts(accountName, accountBalance, approved) VALUES (?, ?, ?)");
+            PreparedStatement appJStatement = connection.prepareStatement("INSERT INTO accounts(accountName, accountBalance, approved) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             appJStatement.setString(1, answer);
-            appJStatement.setDouble(2, 0.00);
+            appJStatement.setInt(2, 0);
             appJStatement.setBoolean(3, false);
-            PreparedStatement appJ3Statement = connection.prepareStatement("SELECT * FROM accounts WHERE accountName = ?");
-            appJ3Statement.setString(1, answer);
-            ResultSet appJ3Result = appJ3Statement.executeQuery();
-            answerI = appJ3Result.getInt("accountNumber");
+            appJStatement.executeUpdate();
+            ResultSet appJResult = appJStatement.getGeneratedKeys();
+            appJResult.next();
+            answerI = appJResult.getInt(3);
             for (int i = 0; i < userIds.size(); i++){
                 PreparedStatement appJ2Statement = connection.prepareStatement("INSERT INTO usersAccounts(userRef, accountRef) VALUES (?, ?)");
                 appJ2Statement.setInt(1, userIds.get(i));
@@ -149,19 +158,20 @@ public class AccountDao{
 
     }
 
-    public void ViewOwn(){
+    public void ViewOwn(int userID){
         try {
             PreparedStatement voStatement = connection.prepareStatement("SELECT * FROM usersAccounts WHERE userRef = ?");
-            voStatement.setInt(1, uDao.userId);
+            voStatement.setInt(1, userID);
             ResultSet voResult = voStatement.executeQuery();
-            ArrayList<Integer> answers = new ArrayList<Integer>();
-            while (voResult.next()){
-                answers.add(voResult.getInt("accountRef"));
-                System.out.println("Account: " + voResult.getInt("accountRef"));
-                voResult.next();
+            voResult.next();
+            int accountID = voResult.getInt("accountRef");
+            PreparedStatement vo2Statement = connection.prepareStatement("SELECT * FROM accounts WHERE accountNumber = ? AND approved = true");
+            vo2Statement.setInt(1, accountID);
+            ResultSet vo2Result = vo2Statement.executeQuery();
+            while (vo2Result.next()){
+                System.out.println("Account: " + vo2Result.getInt("accountNumber") + ", Account Name: " + vo2Result.getString("accountName") + ", Balance: " + vo2Result.getBigDecimal("accountBalance"));
+                vo2Result.next();
             }
-            PreparedStatement vo2Statement = connection.prepareStatement("SELECT * FROM accounts WHERE accountNumber = ?");
-            vo2Statement.setInt(1, answerI);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -201,17 +211,19 @@ public class AccountDao{
         }
     }
 
-    public void SelectAccount(){
+    public void SelectAccount(int userID){
         System.out.println("Which account will you be making changes to today?");
         try{
             PreparedStatement selStatement = connection.prepareStatement("SELECT * FROM usersAccounts WHERE userRef = ?");
-            selStatement.setInt(1, uDao.userId);
+            selStatement.setInt(1, userID);
             ResultSet selResult = selStatement.executeQuery();
             while (selResult.next()){
-                System.out.println(selResult.getInt("accountNumber"));
+                System.out.println(selResult.getInt("accountRef"));
                 selResult.next();
             }
             answerI = scanner.nextInt();
+            accountID = answerI;
+            this.accountID = accountID;
         }
         catch (SQLException e){
             e.printStackTrace();

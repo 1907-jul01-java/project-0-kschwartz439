@@ -12,29 +12,31 @@ public class CustomerDao{
     UserDao uDao = new UserDao();
     AccountDao aDao = new AccountDao();
 
-    public void menu(){
+    public void menu(int userID){
         boolean a=true;
         while (a=true){System.out.println("Would you like to\n1. Check your bank accounts.\n2. Edit your current bank accounts.\n3. Apply for a new bank account.\n4. Logout.\n");
         answer = scanner.next();
         switch (answer){
-            case "1": aDao.ViewOwn();
+            case "1": aDao.ViewOwn(userID);
             break;
             case "2":
                 System.out.println("Would you like to\n1. Make a deposit.\n2. Withdraw money.\n3. Close the account.");
                 answer2 = scanner.next();
                 switch (answer2){
-                    case "1": aDao.Deposit();
+                    case "1": aDao.Deposit(userID);
                     break;
-                    case "2": aDao.Withdraw();
+                    case "2": aDao.Withdraw(userID);
                     break;
                     case "3": aDao.Delete();
+                    break;
                 }
+                break;
             case "3": System.out.println("Will this account be\n1. A personal account.\n2. A joint account.");
                 answer2 = scanner.next();
                 switch (answer2){
-                    case "1": aDao.Apply();
+                    case "1": aDao.Apply(userID);
                     break;
-                    case "2": aDao.ApplyJoint();
+                    case "2": aDao.ApplyJoint(userID);
                     break;
                 }
                 break;
@@ -42,7 +44,7 @@ public class CustomerDao{
             lDao.CheckUserName();
             a=false;
             break;
-            default:
+            default: this.menu(userID);
                 break;
         }
     }

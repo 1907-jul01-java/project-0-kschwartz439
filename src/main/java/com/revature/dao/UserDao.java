@@ -10,35 +10,31 @@ public class UserDao{
     String answer;
     String answer4;
     int accId;
-    String username;
     String firstName;
     String lastName;
-    int userId;
+    int userID;
     int answerI;
     Connection connection;
     Scanner scanner = new Scanner(System.in);
     LoginDao lDao = new LoginDao();
 
-    public void GetName(){
-        username = lDao.username;
-        try (PreparedStatement nStatement = connection.prepareStatement("SELECT * FROM users INNER JOIN userLogins ON id = userId WHERE userLogins.username = ?")) {
-            nStatement.setString(1, username);
+    public void GetName(int userID){
+        try (PreparedStatement nStatement = connection.prepareStatement("SELECT * FROM users WHERE id = ?")) {
+            nStatement.setInt(1, userID);
             ResultSet nResult = nStatement.executeQuery();
             lastName = nResult.getString("lastName");
             firstName = nResult.getString("firstName");
         } catch (SQLException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
     }
 
-    public void GetUserID(){
-        username = lDao.username;
-        try (PreparedStatement idStatement = connection.prepareStatement("SELECT * FROM userLogins WHERE username = ?")) {
-            idStatement.setString(1, username);
-            ResultSet idResult = idStatement.executeQuery();
-            userId = idResult.getInt("userId");
+    public void GetUserID(int userID){
+        try {
+            PreparedStatement idStatement = connection.prepareStatement("SELECT * FROM userLogins WHERE userId = ?");
+            idStatement.setInt(1, userID);
         } catch (SQLException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
     }
 
@@ -135,7 +131,7 @@ public class UserDao{
         ConnectionUtils conUtil = new ConnectionUtils();
         Connection connection = conUtil.getConnection();
         try {
-            PreparedStatement empStatement = connection.prepareStatement("SELECT * FROM users INNER JOIN userLogins ON id = userId WHERE users.access = 'admin'");
+            PreparedStatement empStatement = connection.prepareStatement("SELECT * FROM users INNER JOIN userLogins ON id = userId WHERE users.access = 'employee'");
             ResultSet empResult = empStatement.executeQuery();
             while (empResult.next()){
                 System.out.println(empResult.getString("username") + " id:" + empResult.getInt("id") + "\n");
@@ -211,7 +207,7 @@ public class UserDao{
         ConnectionUtils conUtil = new ConnectionUtils();
         Connection connection = conUtil.getConnection();
         try {
-            PreparedStatement empStatement = connection.prepareStatement("SELECT * FROM users INNER JOIN userLogins ON id = userId WHERE users.access = 'admin'");
+            PreparedStatement empStatement = connection.prepareStatement("SELECT * FROM users INNER JOIN userLogins ON id = userId WHERE users.access = 'customer'");
             ResultSet empResult = empStatement.executeQuery();
             while (empResult.next()){
                 System.out.println(empResult.getString("username") + " id:" + empResult.getInt("id") + "\n");

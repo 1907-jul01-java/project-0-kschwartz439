@@ -1,5 +1,6 @@
 package com.revature.dao;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.revature.connectionutils.ConnectionUtils;
@@ -11,8 +12,9 @@ public class LoginDao{
     String username;
     String password;
     String access;
+    String answer;
 
-    public void CheckPassword(String username){
+    public void CheckPassword(int userID){
         ConnectionUtils conUtil = new ConnectionUtils();
         Connection connection = conUtil.getConnection();
         System.out.println("Please enter your password.\n");
@@ -21,24 +23,94 @@ public class LoginDao{
             System.out.println("Please enter a valid argument and try again.");
             password = scanner.next();
         }
-        try (PreparedStatement upStatement = connection.prepareStatement("SELECT userPass FROM userLogins WHERE username = ? AND userPass = ?")){
-            upStatement.setString(1, username);
+        try (PreparedStatement upStatement = connection.prepareStatement("SELECT userPass FROM userLogins WHERE userId = ? AND userPass = ?")){
+            upStatement.setInt(1, userID);
             upStatement.setString(2, password);
             ResultSet upResult = upStatement.executeQuery();
             if (!upResult.next()){
                 System.out.println("Please enter a valid argument and try again.\n");
-                this.CheckPassword(username);
+                this.CheckPassword(userID);
             }
-            this.CheckAccess(username);
+            this.CheckAccess(userID);
         }
         catch (SQLException e){
             e.getMessage();
         }
     }
+
+    public void CreateUserName(){
+        ConnectionUtils conUtil = new ConnectionUtils();
+        Connection connection = conUtil.getConnection();
+        int number;
+        System.out.println("Please enter your username.\n");
+        username = scanner.next();
+        try {
+            PreparedStatement chkStatement = connection.prepareStatement("SELECT * FROM userLogins");
+            ResultSet chkResult = chkStatement.executeQuery();
+            chkResult.next();
+            ArrayList<String> userIds = new ArrayList<String>();
+            while (chkResult.next()){
+                userIds.add(chkResult.getString("username"));
+                chkResult.next();
+            }
+            for (int i = 0; i < userIds.size(); i++){
+                if (username == userIds.get(i)){
+                    System.out.println("Please try again.");
+                    this.CreateUserName();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ArrayIndexOutOfBoundsException e){
+            e.printStackTrace();
+        }
+        System.out.println("Please enter your password.\n");
+        password = scanner.next();
+        try {
+            PreparedStatement cunStatement = connection.prepareStatement("INSERT INTO userLogins (username, userPass) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+            cunStatement.setString(1, username);
+            cunStatement.setString(2, password);
+            cunStatement.executeUpdate();
+            ResultSet cunResult = cunStatement.getGeneratedKeys();
+            cunResult.next();
+            number = cunResult.getInt(1);
+            System.out.println("Please enter your first name.");
+        String name = scanner.next();
+        System.out.println("Please enter your last name.");
+        String lname = scanner.next();
+        try {
+            PreparedStatement insStatement = connection.prepareStatement("INSERT INTO users (firstName, lastName, id, access) VALUES (?, ?, ?, 'customer')");
+            insStatement.setString(1, name);
+            insStatement.setString(2, lname);
+            insStatement.setInt(3, number);
+            insStatement.executeUpdate();
+            insStatement.close();
+            cunStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        finally {
+            this.Startup();
+        }
+    }
+
+    public void Startup(){
+        System.out.println("1. Log in.\n2. Sign up.\n");
+        answer = scanner.next();
+        switch (answer){
+            case "1": this.CheckUserName();
+                break;
+            case "2": this.CreateUserName();
+                break;
+        }
+    }
+
     public void CheckUserName(){
         ConnectionUtils conUtil = new ConnectionUtils();
         Connection connection = conUtil.getConnection();
-        System.out.println("URL: " + conUtil.getUrl() + " password: " + conUtil.getPassword() + "User: " + conUtil.getUser() + " Connection: " + conUtil.getConnection().toString());
 
         System.out.println("Please enter your username.\n");
         username = scanner.next();
@@ -55,8 +127,9 @@ public class LoginDao{
                 System.out.println("Please enter a valid argument and try again.\n");
                 this.CheckUserName();
             }
+            int userID = unResult.getInt("userId");
             if (username.equals(unResult.getString("username"))){
-                this.CheckPassword(username);
+                this.CheckPassword(userID);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -65,27 +138,27 @@ public class LoginDao{
         }
     }
 
-    public void CheckAccess(String username){  
+    public void CheckAccess(int userID){  
         ConnectionUtils conUtil = new ConnectionUtils();
         Connection connection = conUtil.getConnection();
-        try (PreparedStatement acStatement = connection.prepareStatement("SELECT * FROM users JOIN userLogins ON id = userId WHERE userLogins.username = ?")) {
-            acStatement.setString(1, username);
+        try (PreparedStatement acStatement = connection.prepareStatement("SELECT * FROM users WHERE id = ?")) {
+            acStatement.setInt(1, userID);
             ResultSet acResult = acStatement.executeQuery();
             acResult.next();
             access = acResult.getString("access");
             switch (access){
                 //Customer
                 case "customer": CustomerDao cDao = new CustomerDao();
-                    cDao.menu();
+                    cDao.menu(userID);
                 //Employee
                 case "employee": EmployeeDao eDao = new EmployeeDao();
-                    eDao.menu();
+                    eDao.menu(userID);
                 //Admin
                 case "admin": AdminDao aDao = new AdminDao();
-                    aDao.menu();
+                    aDao.menu(userID);
                 //Creator
                 case "creator": CreatorDao crDao = new CreatorDao();
-                    crDao.menu();
+                    crDao.menu(userID);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -100,5 +173,6 @@ public class LoginDao{
         } catch (SQLException e) {
             e.getMessage();
         }
+        this.Startup();
     }
 }
