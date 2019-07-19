@@ -3,6 +3,7 @@ package com.revature.dao;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.revature.App;
 import com.revature.connectionutils.ConnectionUtils;
 
 import java.sql.*;
@@ -34,7 +35,7 @@ public class LoginDao{
             this.CheckAccess(userID);
         }
         catch (SQLException e){
-            e.getMessage();
+            e.printStackTrace();
         }
     }
 
@@ -73,7 +74,7 @@ public class LoginDao{
             cunStatement.executeUpdate();
             ResultSet cunResult = cunStatement.getGeneratedKeys();
             cunResult.next();
-            number = cunResult.getInt(1);
+            number = cunResult.getInt(3);
             System.out.println("Please enter your first name.");
         String name = scanner.next();
         System.out.println("Please enter your last name.");
@@ -93,19 +94,34 @@ public class LoginDao{
             e.printStackTrace();
         } 
         finally {
+            System.out.println("Thank you for signing up. Returning to the main menu.\n");
             this.Startup();
         }
     }
 
     public void Startup(){
-        System.out.println("1. Log in.\n2. Sign up.\n");
+        ConnectionUtils conUtil = new ConnectionUtils();
+        Connection connection = conUtil.getConnection();
+        boolean b = true;
+        if(b=true){
+        System.out.println("1. Log in.\n2. Sign up.\n3. Shutdown.\n ");
+        b=true;
         answer = scanner.next();
         switch (answer){
             case "1": this.CheckUserName();
                 break;
             case "2": this.CreateUserName();
                 break;
+            case "3": try{connection.close();}
+            catch (SQLException e){e.printStackTrace();}
+            b=false;
+            System.out.println("Thank you for banking with us.\n");
+            System.exit(1);
+            break;
+            default: this.Startup();
+            break;
         }
+    }
     }
 
     public void CheckUserName(){
@@ -175,4 +191,5 @@ public class LoginDao{
         }
         this.Startup();
     }
+
 }

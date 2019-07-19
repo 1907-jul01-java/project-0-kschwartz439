@@ -15,17 +15,29 @@ public class EmployeeDao{
 
     public void menu(int userID){
         boolean a = true;
-        while (a=true){System.out.println("Please select what you want to do.\n1. Edit bank accounts. \n2. Exit.");
+        if (a=true){System.out.println("Please select what you want to do.\n1. Edit bank accounts. \n2. View your accounts.\n3. Edit your accounts.\n4. Apply for an account.\n5. Logout");
         answer = scanner.next();
         switch (answer){
             //Edit bank accounts with a given user ID.
-            case "1": aDao.ViewOther();
+            case "1": aDao.ViewOther(userID);
                 break;
+                
+            //View own bank accounts
+            case "2": aDao.ViewOwnEmployee(userID);
+            break;
+
+            //Edit current bank accounts
+            case "3": aDao.EditMenuEmployee(userID);
+            break;
+
+            //Apply for a bank account.
+            case "4": aDao.JointMenuEmployee(userID);
+            break;
 
             //Logout.
-            case "2": lDao.Logout();
-                lDao.CheckUserName();
-                a=false;
+            case "5": try{connection.close();}catch(SQLException e){e.printStackTrace();}
+            a=false;
+            lDao.Logout();
                 break;
             
             default: this.menu(userID);
