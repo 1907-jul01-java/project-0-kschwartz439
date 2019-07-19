@@ -52,7 +52,6 @@ public class LoginDao{
             ArrayList<String> userIds = new ArrayList<String>();
             while (chkResult.next()){
                 userIds.add(chkResult.getString("username"));
-                chkResult.next();
             }
             for (int i = 0; i < userIds.size(); i++){
                 if (username == userIds.get(i)){

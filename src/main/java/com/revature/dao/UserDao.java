@@ -52,7 +52,6 @@ public class UserDao{
             ResultSet empResult = empStatement.executeQuery();
             while (empResult.next()){
                 System.out.println(empResult.getString("username") + " id:" + empResult.getInt("id") + "\n");
-                empResult.next();
             }
             System.out.println("Please enter the id of the account you would like to edit or enter a new id to add a new account to the admin listing.\n");
             answerI = scanner.nextInt();
@@ -144,7 +143,6 @@ public class UserDao{
             ResultSet empResult = empStatement.executeQuery();
             while (empResult.next()){
                 System.out.println(empResult.getString("username") + " id:" + empResult.getInt("id") + "\n");
-                empResult.next();
             }
             System.out.println("Please enter the id of the account you would like to edit or enter a new id to add a new account to the admin listing.\n");
             answerI = scanner.nextInt();
@@ -224,7 +222,6 @@ public class UserDao{
             ResultSet empResult = empStatement.executeQuery();
             while (empResult.next()){
                 System.out.println(empResult.getString("username") + " id:" + empResult.getInt("id") + "\n");
-                empResult.next();
             }
             System.out.println("Please enter the id of the account you would like to edit or enter a new id to add a new account to the admin listing.\n");
             answerI = scanner.nextInt();
@@ -318,7 +315,6 @@ public class UserDao{
             ResultSet empResult = empStatement.executeQuery();
             while (empResult.next()){
                 System.out.println(empResult.getString("username") + " id:" + empResult.getInt("id") + "\n");
-                empResult.next();
             }
             System.out.println("Please enter the id of the account you would like to edit or enter a new id to add a new account to the admin listing.\n");
             answerI = scanner.nextInt();
@@ -411,7 +407,6 @@ public class UserDao{
             ResultSet empResult = empStatement.executeQuery();
             while (empResult.next()){
                 System.out.println(empResult.getString("username") + " id:" + empResult.getInt("id") + "\n");
-                empResult.next();
             }
             System.out.println("Please enter the id of the account you would like to edit or enter a new id to add a new account to the admin listing.\n");
             answerI = scanner.nextInt();
@@ -502,7 +497,6 @@ public class UserDao{
             ResultSet empResult = empStatement.executeQuery();
             while (empResult.next()){
                 System.out.println(empResult.getString("username") + " id:" + empResult.getInt("id") + "\n");
-                empResult.next();
             }
             System.out.println("Please enter the id of the account you would like to edit or enter a new id to add a new account to the admin listing.\n");
             answerI = scanner.nextInt();

@@ -6,7 +6,7 @@
             "request": "launch",
             "mainClass": "com.revature.App",
             "projectName": "project0",
-            "console": "integratedTerminal"
+            "console": "externalTerminal"
         }
     ]
 }

@@ -73,7 +73,7 @@ public class CreatorDao{
     }
 
     public void menu2(int userID){
-        System.out.println("\nMenu 2:\n1. Add a user to an existing account.\n2. Remove a user from an existing joint account.\n3. Close a bank account.\n4. Go back.\n5.Logout.");
+        System.out.println("\nMenu 2:\n1. Add a user to an existing account.\n2. Remove a user from an existing joint account.\n3. Close a bank account.\n4. Go back.\n5. Logout.");
         answer = scanner.next();
         if (b=true){
             switch (answer){

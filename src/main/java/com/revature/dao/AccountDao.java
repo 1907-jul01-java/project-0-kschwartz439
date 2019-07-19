@@ -276,7 +276,6 @@ public class AccountDao{
             trStatement.setInt(1, userID);
             ResultSet trResult = trStatement.executeQuery();
             while (trResult.next()){
-                trResult.next();
                 System.out.println("Account: "+trResult.getString("accountName")+", Account Number: "+trResult.getInt("accountNumber")+", Balance: "+trResult.getBigDecimal("accountBalance"));
             }
         } catch (SQLException e) {
@@ -334,7 +333,6 @@ public class AccountDao{
             trStatement.setInt(1, userID);
             ResultSet trResult = trStatement.executeQuery();
             while (trResult.next()){
-                trResult.next();
                 System.out.println("Account: "+trResult.getString("accountName")+", Account Number: "+trResult.getInt("accountNumber")+", Balance: "+trResult.getBigDecimal("accountBalance"));
             }
         } catch (SQLException e) {
@@ -392,7 +390,6 @@ public class AccountDao{
             trStatement.setInt(1, userID);
             ResultSet trResult = trStatement.executeQuery();
             while (trResult.next()){
-                trResult.next();
                 System.out.println("Account: "+trResult.getString("accountName")+", Account Number: "+trResult.getInt("accountNumber")+", Balance: "+trResult.getBigDecimal("accountBalance"));
             }
         } catch (SQLException e) {
@@ -450,7 +447,6 @@ public class AccountDao{
             trStatement.setInt(1, userID);
             ResultSet trResult = trStatement.executeQuery();
             while (trResult.next()){
-                trResult.next();
                 System.out.println("Account: "+trResult.getString("accountName")+", Account Number: "+trResult.getInt("accountNumber")+", Balance: "+trResult.getBigDecimal("accountBalance"));
             }
         } catch (SQLException e) {
@@ -607,7 +603,6 @@ public class AccountDao{
             crStatement.setBoolean(1, false);
             ResultSet crResult = crStatement.executeQuery();
             while (crResult.next()){
-                crResult.next();
                 System.out.println("Account Name: "+crResult.getString("accountName")+", Account Number: "+crResult.getInt("accountNumber")+", Status: "+crResult.getBoolean("approved"));
             }
             System.out.println("Please enter the account number of the account you wish to approve.\n");
@@ -631,7 +626,6 @@ public class AccountDao{
             crStatement.setBoolean(1, false);
             ResultSet crResult = crStatement.executeQuery();
             while (crResult.next()){
-                crResult.next();
                 System.out.println("Account Name: "+crResult.getString("accountName")+", Account Number: "+crResult.getInt("accountNumber")+", Status: "+crResult.getBoolean("approved"));
             }
             System.out.println("Please enter the account number of the account you wish to approve.\n");
@@ -808,7 +802,6 @@ public class AccountDao{
             ResultSet ajResult = ajStatement.executeQuery();
             System.out.println("Which account would you like to add someone to?\n");
             while (ajResult.next()){
-                ajResult.next();
                 System.out.println("Account: "+ajResult.getString("accountName")+", Account Number: "+ajResult.getInt("accountNumber"));
             }
             answerI = scanner.nextInt();
@@ -816,7 +809,6 @@ public class AccountDao{
             PreparedStatement aj2Statement = connection.prepareStatement("SELECT * FROM users");
             ResultSet aj2Result = aj2Statement.executeQuery();
             while (aj2Result.next()){
-                aj2Result.next();
                 System.out.println("Name: "+aj2Result.getString("firstName")+" "+aj2Result.getString("lastName")+", User ID: "+aj2Result.getInt("id")+".");
             }
             int answer2I = scanner.nextInt();
@@ -840,7 +832,6 @@ public class AccountDao{
             ResultSet ajResult = ajStatement.executeQuery();
             System.out.println("Which account would you like to add someone to?\n");
             while (ajResult.next()){
-                ajResult.next();
                 System.out.println("Account: "+ajResult.getString("accountName")+", Account Number: "+ajResult.getInt("accountNumber"));
             }
             answerI = scanner.nextInt();
@@ -848,7 +839,6 @@ public class AccountDao{
             PreparedStatement aj2Statement = connection.prepareStatement("SELECT * FROM users");
             ResultSet aj2Result = aj2Statement.executeQuery();
             while (aj2Result.next()){
-                aj2Result.next();
                 System.out.println("Name: "+aj2Result.getString("firstName")+" "+aj2Result.getString("lastName")+", User ID: "+aj2Result.getInt("id")+".");
             }
             int answer2I = scanner.nextInt();
@@ -870,10 +860,7 @@ public class AccountDao{
         try {
             PreparedStatement delStatement = connection.prepareStatement("SELECT * FROM accounts");
             ResultSet delResult = delStatement.executeQuery();
-            delResult.next();
-            System.out.println("Account: "+delResult.getString("accountName")+", Account Number: "+delResult.getInt("accountNumber")+", Account Balance: "+delResult.getBigDecimal("accountBalance"));
             while (delResult.next()){
-                delResult.next();
                 System.out.println("Account: "+delResult.getString("accountName")+", Account Number: "+delResult.getInt("accountNumber")+", Account Balance: "+delResult.getBigDecimal("accountBalance"));
             }
             delStatement.close();
@@ -900,10 +887,7 @@ public class AccountDao{
         try {
             PreparedStatement delStatement = connection.prepareStatement("SELECT * FROM accounts");
             ResultSet delResult = delStatement.executeQuery();
-            delResult.next();
-            System.out.println("Account: "+delResult.getString("accountName")+", Account Number: "+delResult.getInt("accountNumber")+", Account Balance: "+delResult.getBigDecimal("accountBalance"));
             while (delResult.next()){
-                delResult.next();
                 System.out.println("Account: "+delResult.getString("accountName")+", Account Number: "+delResult.getInt("accountNumber")+", Account Balance: "+delResult.getBigDecimal("accountBalance"));
             }
             delStatement.close();
@@ -930,10 +914,7 @@ public class AccountDao{
         try {
             PreparedStatement delStatement = connection.prepareStatement("SELECT * FROM accounts");
             ResultSet delResult = delStatement.executeQuery();
-            delResult.next();
-            System.out.println("Account: "+delResult.getString("accountName")+", Account Number: "+delResult.getInt("accountNumber")+", Account Balance: "+delResult.getBigDecimal("accountBalance"));
             while (delResult.next()){
-                delResult.next();
                 System.out.println("Account: "+delResult.getString("accountName")+", Account Number: "+delResult.getInt("accountNumber")+", Account Balance: "+delResult.getBigDecimal("accountBalance"));
             }
             delStatement.close();
@@ -960,10 +941,7 @@ public class AccountDao{
         try {
             PreparedStatement delStatement = connection.prepareStatement("SELECT * FROM accounts");
             ResultSet delResult = delStatement.executeQuery();
-            delResult.next();
-            System.out.println("Account: "+delResult.getString("accountName")+", Account Number: "+delResult.getInt("accountNumber")+", Account Balance: "+delResult.getBigDecimal("accountBalance"));
             while (delResult.next()){
-                delResult.next();
                 System.out.println("Account: "+delResult.getString("accountName")+", Account Number: "+delResult.getInt("accountNumber")+", Account Balance: "+delResult.getBigDecimal("accountBalance"));
             }
             delStatement.close();
@@ -991,7 +969,6 @@ public class AccountDao{
             PreparedStatement reStatement = connection.prepareStatement("SELECT * FROM accounts INNER JOIN usersAccounts ON accountNumber = accountRef GROUP BY usersAccounts.accountsRef HAVING COUNT(*) > 1");
             ResultSet reResult = reStatement.executeQuery();
             while (reResult.next()){
-                reResult.next();
                 System.out.println("Account: "+reResult.getString("accountName")+", Account Number: "+reResult.getInt("accountNumber")+".");
             }
             answerI = scanner.nextInt();
@@ -1000,7 +977,6 @@ public class AccountDao{
             ResultSet re2Result = re2Statement.executeQuery();
             System.out.println("Choose who you wish to remove from this account.\n");
             while (re2Result.next()){
-                re2Result.next();
                 System.out.println("Name: "+re2Result.getString("firstName")+" "+re2Result.getString("lastName")+", User ID: "+re2Result.getInt("id")+".");
             }            
             int answer2I = scanner.nextInt();
@@ -1023,7 +999,6 @@ public class AccountDao{
             PreparedStatement reStatement = connection.prepareStatement("SELECT * FROM accounts INNER JOIN usersAccounts ON accountNumber = accountRef GROUP BY usersAccounts.accountsRef HAVING COUNT(*) > 1");
             ResultSet reResult = reStatement.executeQuery();
             while (reResult.next()){
-                reResult.next();
                 System.out.println("Account: "+reResult.getString("accountName")+", Account Number: "+reResult.getInt("accountNumber")+".");
             }
             answerI = scanner.nextInt();
@@ -1032,7 +1007,6 @@ public class AccountDao{
             ResultSet re2Result = re2Statement.executeQuery();
             System.out.println("Choose who you wish to remove from this account.\n");
             while (re2Result.next()){
-                re2Result.next();
                 System.out.println("Name: "+re2Result.getString("firstName")+" "+re2Result.getString("lastName")+", User ID: "+re2Result.getInt("id")+".");
             }            
             int answer2I = scanner.nextInt();
@@ -1055,7 +1029,6 @@ public class AccountDao{
             ResultSet vo2Result = vo2Statement.executeQuery();
             while (vo2Result.next()){
                 System.out.println("Account: " + vo2Result.getInt("accountNumber") + ", Account Name: " + vo2Result.getString("accountName") + ", Balance: " + vo2Result.getBigDecimal("accountBalance"));
-                vo2Result.next();
             }
 
         } catch (SQLException e) {
@@ -1074,7 +1047,6 @@ public class AccountDao{
             ResultSet vo2Result = vo2Statement.executeQuery();
             while (vo2Result.next()){
                 System.out.println("Account: " + vo2Result.getInt("accountNumber") + ", Account Name: " + vo2Result.getString("accountName") + ", Balance: " + vo2Result.getBigDecimal("accountBalance"));
-                vo2Result.next();
             }
 
         } catch (SQLException e) {
@@ -1093,7 +1065,6 @@ public class AccountDao{
             ResultSet vo2Result = vo2Statement.executeQuery();
             while (vo2Result.next()){
                 System.out.println("Account: " + vo2Result.getInt("accountNumber") + ", Account Name: " + vo2Result.getString("accountName") + ", Balance: " + vo2Result.getBigDecimal("accountBalance"));
-                vo2Result.next();
             }
 
         } catch (SQLException e) {
@@ -1112,7 +1083,6 @@ public class AccountDao{
             ResultSet vo2Result = vo2Statement.executeQuery();
             while (vo2Result.next()){
                 System.out.println("Account: " + vo2Result.getInt("accountNumber") + ", Account Name: " + vo2Result.getString("accountName") + ", Balance: " + vo2Result.getBigDecimal("accountBalance"));
-                vo2Result.next();
             }
 
         } catch (SQLException e) {
@@ -1138,7 +1108,6 @@ public class AccountDao{
             ResultSet voResult = voStatement.executeQuery();
             while (voResult.next()){
                 System.out.println("account: " + voResult.getString("accountName") + ", account number: " + voResult.getString("accountNumber") + ", balance: " + voResult.getDouble("accountBalance") + ", status:" + voResult.getBoolean("approved"));
-                voResult.next();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1163,7 +1132,6 @@ public class AccountDao{
             ResultSet voResult = voStatement.executeQuery();
             while (voResult.next()){
                 System.out.println("account: " + voResult.getString("accountName") + ", account number: " + voResult.getString("accountNumber") + ", balance: " + voResult.getDouble("accountBalance") + ", status:" + voResult.getBoolean("approved"));
-                voResult.next();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1188,7 +1156,6 @@ public class AccountDao{
             ResultSet voResult = voStatement.executeQuery();
             while (voResult.next()){
                 System.out.println("account: " + voResult.getString("accountName") + ", account number: " + voResult.getString("accountNumber") + ", balance: " + voResult.getDouble("accountBalance") + ", status:" + voResult.getBoolean("approved"));
-                voResult.next();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1237,8 +1204,7 @@ public class AccountDao{
             selStatement.setInt(1, userID);
             ResultSet selResult = selStatement.executeQuery();
             while (selResult.next()){
-                System.out.println(selResult.getInt("accountRef"));
-                selResult.next();
+                System.out.println("Account: "+selResult.getString("accountName")+"Account Number: "+selResult.getInt("accountRef"));
             }
             answerI = scanner.nextInt();
             accountID = answerI;
